@@ -6,6 +6,14 @@ on:
       - main
   pull_request:
   workflow_dispatch:
+   inputs:
+    env:
+        type: choice
+        description: 'Env'
+        required: true
+        options:
+          - test
+    
 
 env:
   TERRAFORM_VERSION: 1.1.6
@@ -15,6 +23,8 @@ jobs:
   terraform:
     name: "Terraform"
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event.inputs.env }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -43,7 +53,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/platform/ALZP-WL-Owner
+          #role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/platform/ALZP-WL-Owner
           role-duration-seconds: 3600
           role-skip-session-tagging: true
 
